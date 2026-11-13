@@ -1,0 +1,408 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shahdol Smart District Portal</title>
+<meta name="description" content="शहडोल जिले की जानकारी, कृषि, स्वास्थ्य, शिक्षा, पर्यटन और सरकारी सेवाएँ।">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans Devanagari',sans-serif;color:#17324b;background:#f5f8fb}
+.topbar{background:#092e50;color:white;padding:8px;font-size:13px}
+.header{background:white;padding:15px 5%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px}
+.logo{display:flex;align-items:center;gap:12px;color:#104c78}
+.logo-icon{background:#176b9d;color:white;padding:10px 15px;border-radius:10px;font-size:25px;font-weight:bold}
+.logo h2{font-size:23px;font-weight:800;margin:0}
+.logo small{font-size:11px;letter-spacing:2px}
+.search{display:flex}
+.search input{padding:10px;border:1px solid #ccc;border-radius:6px 0 0 6px}
+.search button{background:#14865b;color:white;border:0;padding:10px 17px;border-radius:0 6px 6px 0}
+nav{background:#10446d;padding:0 4%}
+nav ul{display:flex;list-style:none;flex-wrap:wrap;margin:0;padding:0}
+nav a{display:block;color:white;text-decoration:none;padding:14px 13px;font-size:14px}
+nav a:hover{background:#16845d;color:white}
+.hero{height:440px;position:relative;overflow:hidden;background:#123b5d}
+.slide{position:absolute;inset:0;background-size:cover;background-position:center;display:flex;align-items:center;padding:5%;opacity:0;transition:opacity 1s}
+.slide.active{opacity:1}
+.slide:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#062c4be8,#062c4b55)}
+.slide-content{position:relative;color:white;max-width:700px}
+.slide-content h1{font-size:clamp(30px,5vw,50px);font-weight:800;margin:15px 0}
+.slide-content p{font-size:17px;line-height:1.8}
+.btn-main{display:inline-block;background:#16875b;color:white;padding:12px 22px;border-radius:5px;text-decoration:none;margin-top:15px}
+.slider-dots{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:10px}
+.dot{height:10px;width:10px;background:white;border-radius:50%;cursor:pointer}
+.dot.active{background:#24c586;width:25px;border-radius:10px}
+.notice{background:#fff3d6;padding:15px 5%;border-left:5px solid #e7a52e;margin:20px 5%;border-radius:5px}
+.container-section{padding:45px 5%}
+.heading{text-align:center;margin-bottom:30px}
+.heading h2{font-weight:800;color:#10446d}
+.heading p{color:#6b7b89}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+.card-box{background:white;padding:24px;border-radius:12px;border:1px solid #e5edf2;box-shadow:0 5px 20px #123b5d0b;transition:.3s;text-decoration:none;color:#17324b}
+.card-box:hover{transform:translateY(-6px);box-shadow:0 12px 25px #123b5d1a}
+.card-icon{font-size:35px;margin-bottom:15px}
+.card-box h3{font-size:19px;font-weight:700}
+.card-box p{font-size:14px;color:#71808e;line-height:1.7}
+.more{color:#14865b;font-weight:bold}
+.about{background:white;padding:35px;border-radius:12px;line-height:2}
+.about h2{color:#10446d;font-weight:800}
+.stats{background:#10446d;color:white;padding:35px 5%;display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:center}
+.stats h2{font-size:27px}
+.stats p{color:#d7e6f0}
+.news-card{background:white;padding:22px;border-radius:10px;border:1px solid #e5edf2}
+.news-card h3{font-size:18px;margin:12px 0}
+.news-card p{color:#68798a;font-size:14px;line-height:1.7}
+.quick{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.quick a{background:#e7f3ed;color:#126044;text-decoration:none;padding:12px 18px;border-radius:7px;font-weight:600}
+.footer{background:#092e50;color:white;padding:40px 5% 15px}
+.footer a{color:#bcebd6;text-decoration:none;display:block;margin:9px 0}
+.footer-bottom{text-align:center;border-top:1px solid #ffffff30;margin-top:25px;padding-top:15px;font-size:13px}
+.chat-button{position:fixed;right:20px;bottom:20px;background:#13865b;color:white;border:0;padding:15px 20px;border-radius:30px;z-index:99;box-shadow:0 5px 20px #0003;cursor:pointer}
+.chat-window{display:none;position:fixed;right:20px;bottom:85px;width:330px;max-width:calc(100% - 40px);height:420px;background:white;border-radius:13px;box-shadow:0 5px 30px #0004;z-index:100;overflow:hidden}
+.chat-window.open{display:flex;flex-direction:column}
+.chat-head{background:#10446d;color:white;padding:15px;font-weight:bold;display:flex;justify-content:space-between}
+.chat-body{flex:1;padding:12px;overflow:auto;background:#f5f8fb}
+.message{padding:10px;margin:8px 0;border-radius:10px;font-size:13px;line-height:1.6;white-space:pre-wrap}
+.bot{background:white;border:1px solid #ddd}
+.user{background:#d8f3e5;text-align:right}
+.chat-form{display:flex;padding:10px;gap:5px}
+.chat-form input{width:100%;padding:10px;border:1px solid #ddd;border-radius:6px}
+.chat-form button{background:#14865b;color:white;border:0;padding:10px;border-radius:6px}
+@media(max-width:700px){
+.header{padding:15px;flex-direction:column;align-items:flex-start}
+.search{width:100%}.search input{flex:1;min-width:0}
+nav ul{flex-direction:column}nav a{padding:10px}
+.hero{height:390px}
+.stats{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+मध्य प्रदेश शासन | जिला शहडोल
+</div>
+
+<header class="header">
+<div class="logo">
+<div class="logo-icon">श</div>
+<div>
+<h2>SHAHDOL</h2>
+<small>SMART DISTRICT PORTAL</small>
+</div>
+</div>
+
+<form class="search" onsubmit="searchSite(event)">
+<input id="searchInput" placeholder="शहडोल में खोजें...">
+<button type="submit">खोजें</button>
+</form>
+</header>
+
+<nav>
+<ul>
+<li><a href="index.html">होम</a></li>
+<li><a href="about.html">हमारे बारे में</a></li>
+<li><a href="administration.html">प्रशासन</a></li>
+<li><a href="agriculture.html">कृषि</a></li>
+<li><a href="health.html">स्वास्थ्य</a></li>
+<li><a href="education.html">शिक्षा</a></li>
+<li><a href="tourism.html">पर्यटन</a></li>
+<li><a href="culture.html">संस्कृति</a></li>
+<li><a href="schemes.html">योजनाएँ</a></li>
+<li><a href="news.html">समाचार</a></li>
+<li><a href="contact.html">संपर्क</a></li>
+</ul>
+</nav>
+
+<!-- IMAGE SLIDER -->
+<section class="hero">
+
+<div class="slide active" style="background-image:url('https://images.unsplash.com/photo-1472396961693-142e6e269027?auto=format&fit=crop&w=1600&q=85')">
+<div class="slide-content">
+<span>मध्य प्रदेश • भारत</span>
+<h1>शहडोल जिले में आपका स्वागत है</h1>
+<p>हमारा शहडोल, हमारी पहचान। जिले की संस्कृति, पर्यटन, कृषि और विकास की संपूर्ण जानकारी एक ही पोर्टल पर।</p>
+<a href="about.html" class="btn-main">जिले के बारे में जानें →</a>
+</div>
+</div>
+
+<div class="slide" style="background-image:url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1600&q=85')">
+<div class="slide-content">
+<span>AGRICULTURE DEPARTMENT</span>
+<h1>किसानों के लिए डिजिटल सहायता</h1>
+<p>कृषि योजनाएँ, फसल जानकारी, खेती की तकनीक और किसानों के लिए उपयोगी सेवाएँ।</p>
+<a href="agriculture.html" class="btn-main">कृषि जानकारी →</a>
+</div>
+</div>
+
+<div class="slide" style="background-image:url('https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=1600&q=85')">
+<div class="slide-content">
+<span>EXPLORE SHAHDOL</span>
+<h1>शहडोल की प्राकृतिक सुंदरता</h1>
+<p>हमारे जिले के धार्मिक, ऐतिहासिक और प्राकृतिक पर्यटन स्थलों को जानें।</p>
+<a href="tourism.html" class="btn-main">पर्यटन देखें →</a>
+</div>
+</div>
+
+<div class="slider-dots">
+<span class="dot active" onclick="showSlide(0)"></span>
+<span class="dot" onclick="showSlide(1)"></span>
+<span class="dot" onclick="showSlide(2)"></span>
+</div>
+</section>
+
+<div class="notice">
+<strong>📢 महत्वपूर्ण सूचना:</strong>
+शहडोल जिले की सरकारी सूचनाएँ और सेवाएँ यहाँ देखें। किसी भी महत्वपूर्ण जानकारी की पुष्टि संबंधित आधिकारिक विभाग से अवश्य करें।
+</div>
+
+<!-- DISTRICT INTRODUCTION -->
+<section class="container-section">
+<div class="about">
+<h2>शहडोल जिले का परिचय</h2>
+<p>
+शहडोल मध्य प्रदेश का एक महत्वपूर्ण जिला है। यह क्षेत्र अपनी प्राकृतिक सुंदरता,
+वन संपदा, सांस्कृतिक विरासत और आदिवासी परंपराओं के लिए जाना जाता है।
+इस पोर्टल का उद्देश्य जिले के नागरिकों को प्रशासन, कृषि, स्वास्थ्य,
+शिक्षा, पर्यटन और सरकारी योजनाओं की जानकारी उपलब्ध कराना है।
+</p>
+<a href="about.html" class="btn-main">और अधिक पढ़ें</a>
+</div>
+</section>
+
+<!-- DEPARTMENTS -->
+<section class="container-section">
+<div class="heading">
+<h2>हमारे विभाग और सेवाएँ</h2>
+<p>शहडोल जिले की महत्वपूर्ण जानकारी एक ही स्थान पर</p>
+</div>
+
+<div class="cards">
+
+<a href="about.html" class="card-box">
+<div class="card-icon">🏛️</div>
+<h3>जिला परिचय</h3>
+<p>शहडोल का इतिहास, भूगोल और जिले की सामान्य जानकारी।</p>
+<span class="more">और जानें →</span>
+</a>
+
+<a href="administration.html" class="card-box">
+<div class="card-icon">🏢</div>
+<h3>जिला प्रशासन</h3>
+<p>कलेक्टर, तहसील, विकासखंड और सरकारी कार्यालय।</p>
+<span class="more">और जानें →</span>
+</a>
+
+<a href="agriculture.html" class="card-box">
+<div class="card-icon">🌾</div>
+<h3>कृषि विभाग</h3>
+<p>फसल, बीज, खाद, खेती की तकनीक और किसान योजनाएँ।</p>
+<span class="more">और जानें →</span>
+</a>
+
+<a href="health.html" class="card-box">
+<div class="card-icon">🏥</div>
+<h3>स्वास्थ्य विभाग</h3>
+<p>अस्पताल, स्वास्थ्य सेवाएँ और आपातकालीन सहायता।</p>
+<span class="more">और जानें →</span>
+</a>
+
+<a href="education.html" class="card-box">
+<div class="card-icon">🎓</div>
+<h3>शिक्षा विभाग</h3>
+<p>स्कूल, कॉलेज, छात्रवृत्ति और शिक्षा योजनाएँ।</p>
+<span class="more">और जानें →</span>
+</a>
+
+<a href="tourism.html" class="card-box">
+<div class="card-icon">🏞️</div>
+<h3>पर्यटन विभाग</h3>
+<p>मंदिर, प्राकृतिक स्थल और जिले के दर्शनीय स्थान।</p>
+<span class="more">और जानें →</span>
+</a>
+
+<a href="culture.html" class="card-box">
+<div class="card-icon">🎭</div>
+<h3>संस्कृति और इतिहास</h3>
+<p>आदिवासी संस्कृति, परंपराएँ, लोकगीत और त्योहार।</p>
+<span class="more">और जानें →</span>
+</a>
+
+<a href="schemes.html" class="card-box">
+<div class="card-icon">📋</div>
+<h3>सरकारी योजनाएँ</h3>
+<p>केंद्र और मध्य प्रदेश सरकार की योजनाएँ।</p>
+<span class="more">और जानें →</span>
+</a>
+
+<a href="emergency.html" class="card-box">
+<div class="card-icon">🆘</div>
+<h3>हेल्पलाइन</h3>
+<p>पुलिस, एम्बुलेंस और अन्य जरूरी सहायता नंबर।</p>
+<span class="more">और जानें →</span>
+</a>
+
+</div>
+</section>
+
+<!-- HIGHLIGHTS -->
+<section class="stats">
+<div><h2>SHAHDOL</h2><p>हमारा जिला</p></div>
+<div><h2>09+</h2><p>सूचना विभाग</p></div>
+<div><h2>24×7</h2><p>डिजिटल पहुँच</p></div>
+<div><h2>एक मंच</h2><p>नागरिक सेवाएँ</p></div>
+</section>
+
+<!-- LATEST NEWS -->
+<section class="container-section">
+<div class="heading">
+<h2>शहडोल की ताजा खबरें</h2>
+<p>जिले से संबंधित महत्वपूर्ण समाचार और सूचनाएँ</p>
+</div>
+
+<div class="cards">
+<div class="news-card">
+<h3>🌾 कृषि समाचार</h3>
+<p>किसानों के लिए कृषि योजनाओं और नई खेती तकनीकों की जानकारी।</p>
+<a href="agriculture.html">और पढ़ें →</a>
+</div>
+
+<div class="news-card">
+<h3>🏥 स्वास्थ्य समाचार</h3>
+<p>जिले की स्वास्थ्य सेवाओं और सरकारी स्वास्थ्य योजनाओं की जानकारी।</p>
+<a href="health.html">और पढ़ें →</a>
+</div>
+
+<div class="news-card">
+<h3>🎓 शिक्षा समाचार</h3>
+<p>स्कूल, कॉलेज, प्रवेश और छात्रवृत्ति संबंधी जानकारी।</p>
+<a href="education.html">और पढ़ें →</a>
+</div>
+</div>
+</section>
+
+<!-- QUICK LINKS -->
+<section class="container-section" style="background:white">
+<div class="heading">
+<h2>महत्वपूर्ण सरकारी लिंक</h2>
+</div>
+<div class="quick">
+<a href="https://shahdol.nic.in/" target="_blank">शहडोल जिला पोर्टल ↗</a>
+<a href="https://mp.gov.in/" target="_blank">मध्य प्रदेश शासन ↗</a>
+<a href="https://pmkisan.gov.in/" target="_blank">PM किसान ↗</a>
+<a href="https://abdm.gov.in/" target="_blank">स्वास्थ्य सेवाएँ ↗</a>
+<a href="https://uidai.gov.in/" target="_blank">आधार पोर्टल ↗</a>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+<div class="row">
+<div class="col-md-6">
+<h3>SHAHDOL SMART DISTRICT PORTAL</h3>
+<p>Digital Shahdol – Smart Information for Every Citizen.</p>
+<p>शहडोल जिले की जानकारी के लिए आपका अपना डिजिटल प्लेटफॉर्म।</p>
+</div>
+<div class="col-md-3">
+<h5>महत्वपूर्ण लिंक</h5>
+<a href="about.html">हमारे बारे में</a>
+<a href="agriculture.html">कृषि विभाग</a>
+<a href="health.html">स्वास्थ्य विभाग</a>
+<a href="tourism.html">पर्यटन</a>
+</div>
+<div class="col-md-3">
+<h5>संपर्क</h5>
+<a href="https://shahdol.nic.in/" target="_blank">आधिकारिक जिला वेबसाइट</a>
+<a href="contact.html">हमसे संपर्क करें</a>
+</div>
+</div>
+<div class="footer-bottom">
+© 2026 SHAHDOL SMART DISTRICT PORTAL | All Rights Reserved
+</div>
+</footer>
+
+<!-- CHATBOT -->
+<button class="chat-button" onclick="toggleChat()">💬 Shahdol AI Assistant</button>
+
+<div class="chat-window" id="chatWindow">
+<div class="chat-head">
+SHAHDOL AI ASSISTANT
+<button onclick="toggleChat()" style="background:none;border:0;color:white;font-size:22px">×</button>
+</div>
+<div class="chat-body" id="chatBody">
+<div class="message bot">नमस्ते! 🙏 मैं Shahdol AI Assistant हूँ। आप शहडोल जिले के बारे में क्या जानना चाहते हैं?</div>
+</div>
+<form class="chat-form" onsubmit="sendMessage(event)">
+<input id="chatInput" placeholder="अपना सवाल लिखें..." required>
+<button type="submit">भेजें</button>
+</form>
+</div>
+
+<script>
+let currentSlide=0;
+const slides=document.querySelectorAll('.slide');
+const dots=document.querySelectorAll('.dot');
+
+function showSlide(index){
+slides[currentSlide].classList.remove('active');
+dots[currentSlide].classList.remove('active');
+currentSlide=index;
+slides[currentSlide].classList.add('active');
+dots[currentSlide].classList.add('active');
+}
+
+setInterval(()=>{
+showSlide((currentSlide+1)%slides.length);
+},5000);
+
+function searchSite(e){
+e.preventDefault();
+let q=document.getElementById('searchInput').value.trim().toLowerCase();
+if(!q)return;
+let pages=[
+['कृषि','agriculture.html'],['खेती','agriculture.html'],
+['किसान','agriculture.html'],['स्वास्थ्य','health.html'],
+['अस्पताल','health.html'],['शिक्षा','education.html'],
+['कॉलेज','education.html'],['पर्यटन','tourism.html'],
+['मंदिर','tourism.html'],['प्रशासन','administration.html'],
+['योजना','schemes.html'],['संस्कृति','culture.html'],
+['इतिहास','about.html'],['गांव','administration.html']
+];
+let found=pages.find(x=>q.includes(x[0]));
+if(found)location.href=found[1];
+else alert('इस विषय की जानकारी के लिए कृपया संबंधित विभाग का पेज देखें या जिला पोर्टल पर खोजें।');
+}
+
+function toggleChat(){
+document.getElementById('chatWindow').classList.toggle('open');
+}
+
+function sendMessage(e){
+e.preventDefault();
+let input=document.getElementById('chatInput');
+let text=input.value.trim();
+if(!text)return;
+
+let body=document.getElementById('chatBody');
+let user=document.createElement('div');
+user.className='message user';
+user.textContent=text;
+body.appendChild(user);
+input.value='';
+
+let bot=document.createElement('div');
+bot.className='message bot';
+bot.textContent='धन्यवाद! इस सवाल का सत्यापित जवाब पाने के लिए संबंधित विभाग की जानकारी देखें। आप कृषि, स्वास्थ्य, शिक्षा, पर्यटन या प्रशासन के पेज पर जा सकते हैं।';
+body.appendChild(bot);
+body.scrollTop=body.scrollHeight;
+}
+</script>
+
+</body>
+</html>
